@@ -74,20 +74,23 @@ func TestWorldTriangles(t *testing.T) {
 	assert.Equal(t, []Triangle{{1, 2}, {0, 1, 2, 3}, {0, 1, 2, 3}}, tt)
 }
 
-func BenchmarkWorldTriangles(b *testing.B) {
-	w := NewWorld(
-		func(x, y float64) float64 {
+func BenchWorldTrianglesN(tot int, b *testing.B) {
+	w := NewWorld()
+	for t := 0; t < tot; t++ {
+		w.Add(func(x, y float64) float64 {
 			return x + y
-		},
-		func(x, y float64) float64 {
-			return x * y
-		},
-		func(x, y float64) float64 {
-			return x / y
-		},
-	)
+		})
+	}
 
 	for n := 0; n < b.N; n++ {
 		w.Triangles(BB{P{-1, -1}, P{1, 1}}, 0)
 	}
 }
+
+func BenchmarkWorldTriangles1(b *testing.B)       { BenchWorldTrianglesN(1, b) }
+func BenchmarkWorldTriangles10(b *testing.B)      { BenchWorldTrianglesN(10, b) }
+func BenchmarkWorldTriangles100(b *testing.B)     { BenchWorldTrianglesN(100, b) }
+func BenchmarkWorldTriangles1000(b *testing.B)    { BenchWorldTrianglesN(1000, b) }
+func BenchmarkWorldTriangles10000(b *testing.B)   { BenchWorldTrianglesN(10000, b) }
+func BenchmarkWorldTriangles100000(b *testing.B)  { BenchWorldTrianglesN(100000, b) }
+func BenchmarkWorldTriangles1000000(b *testing.B) { BenchWorldTrianglesN(1000000, b) }
