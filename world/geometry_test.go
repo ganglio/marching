@@ -27,6 +27,11 @@ func TestBBSize(t *testing.T) {
 	assert.Equal(t, P{8, 3}, b.Size())
 }
 
+func TestBBScale(t *testing.T) {
+	b := BB{P{2, 3}, P{3, 4}}
+	assert.Equal(t, BB{P{3, 4.5}, P{4.5, 6}}, b.Scale(1.5))
+}
+
 func TestEAddV(t *testing.T) {
 	e := E{}
 

@@ -1,6 +1,7 @@
 package world
 
 import (
+	"math"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -36,12 +37,22 @@ func TestTriangles(t *testing.T) {
 	assert.Equal(t, Triangle{0, 3}, tr)
 }
 
-func TestCircle(t *testing.T) {
-	c := Circle(0, 0, 1)
+func TestRot(t *testing.T) {
+	f := Entity(func(x, y float64) float64 {
+		return x + y
+	}).Rot(-math.Pi / 4)
 
-	assert.Equal(t, 0.0, c(0, 1))
-	assert.Equal(t, 0.0, c(0, -1))
-	assert.Equal(t, 0.0, c(1, 0))
-	assert.Equal(t, 0.0, c(-1, 0))
-	assert.Equal(t, 1.0, c(0, 0))
+	assert.Equal(t, 0.0, f(0, 0))
+	assert.Greater(t, eps, math.Abs(f(-1.0, 0)))
+	assert.Greater(t, eps, math.Abs(f(1.0, 0)))
+}
+
+func TestScale(t *testing.T) {
+	f := Entity(func(x, y float64) float64 {
+		return x + y
+	}).Scale(0.5)
+
+	assert.Equal(t, 0.0, f(0, 0))
+	assert.Equal(t, 4.0, f(1, 1))
+	assert.Equal(t, -4.0, f(-1, -1))
 }

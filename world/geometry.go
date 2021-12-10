@@ -28,6 +28,20 @@ type BB struct {
 	P2 P
 }
 
+// Scale scale the BB by multiplying both P by a factor
+func (b BB) Scale(f float64) BB {
+	return BB{
+		P{
+			b.P1.X * f,
+			b.P1.Y * f,
+		},
+		P{
+			b.P2.X * f,
+			b.P2.Y * f,
+		},
+	}
+}
+
 // Size returns the width and height of a BB
 func (b BB) Size() P {
 	return P{b.P2.X - b.P1.X, b.P2.Y - b.P1.Y}

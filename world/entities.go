@@ -1,5 +1,9 @@
 package world
 
+import (
+	"math"
+)
+
 // Entity an entity in the world.
 type Entity func(x float64, y float64) float64
 
@@ -37,9 +41,18 @@ func (e Entity) Triangles(b BB, t float64) Triangle {
 	return Triangulations[e.Number(b, t)]
 }
 
-// Circle - ditto
-func Circle(cx, cy, r float64) Entity {
+// Rot applies a teta radiant rotation to the entity
+func (e Entity) Rot(teta float64) Entity {
 	return func(x, y float64) float64 {
-		return r*r - (x-cx)*(x-cx) - (y-cy)*(y-cy)
+		u := x*math.Cos(teta) - y*math.Sin(teta)
+		v := x*math.Sin(teta) + y*math.Cos(teta)
+		return e(u, v)
+	}
+}
+
+// Scale applies an alpha scaling factor to the entity
+func (e Entity) Scale(alpha float64) Entity {
+	return func(x, y float64) float64 {
+		return e(x/alpha, y/alpha)
 	}
 }
