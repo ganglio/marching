@@ -19,6 +19,7 @@ func (e Entity) Number(b BB, t float64) int {
 		v3 = 8
 	}
 	return v0 + v1 + v2 + v3
+	// TODO Handle Saddles
 }
 
 // Val returns the value of an entity in P

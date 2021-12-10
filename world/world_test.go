@@ -74,6 +74,69 @@ func TestWorldTriangles(t *testing.T) {
 	assert.Equal(t, []Triangle{{1, 2}, {0, 1, 2, 3}, {0, 1, 2, 3}}, tt)
 }
 
+func TestWorldGeometries(t *testing.T) {
+	b := BB{P{-3, -3}, P{3, 3}}
+
+	t.Run("line", func(t *testing.T) {
+		w := NewWorld(
+			func(x, y float64) float64 {
+				return x + y
+			},
+		)
+		g := w.Geometries(b, 3, 3, -1)
+		e := []E{
+			{
+				V: []P{
+					{1, -2},
+					{0, -1},
+					{2, -3},
+					{-1, 0},
+					{-2, 1},
+					{-3, 2},
+				},
+				E: []I{
+					{0, 1},
+					{2, 0},
+					{3, 4},
+					{1, 3},
+					{4, 5},
+				},
+			},
+		}
+		assert.Equal(t, e, g)
+	})
+
+	t.Run("circle", func(t *testing.T) {
+		w := NewWorld(Circle(0, 0, 2))
+		g := w.Geometries(b, 3, 3, 0)
+		e := []E{
+			{
+				V: []P{
+					{-1, -2},
+					{-2, -1},
+					{1, -2},
+					{2, -1},
+					{-2, 1},
+					{2, 1},
+					{-1, 2},
+					{1, 2},
+				},
+				E: []I{
+					{0, 1},
+					{2, 0},
+					{3, 2},
+					{1, 4},
+					{3, 5},
+					{4, 6},
+					{7, 6},
+					{5, 7},
+				},
+			},
+		}
+		assert.Equal(t, e, g)
+	})
+}
+
 func BenchWorldTrianglesN(tot int, b *testing.B) {
 	w := NewWorld()
 	for t := 0; t < tot; t++ {
