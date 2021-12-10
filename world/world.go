@@ -1,9 +1,5 @@
 package world
 
-import (
-	log "github.com/sirupsen/logrus"
-)
-
 // World describes the entities in the current world
 type World struct {
 	funcs []Entity
@@ -60,7 +56,6 @@ func (w *World) Geometries(bb BB, h int, v int, t float64) []E {
 	o := make([]E, len(w.funcs))
 
 	s := bb.Size()
-	log.Infof("S: %#v", s)
 
 	for j := 0; j < v; j++ {
 		for i := 0; i < h; i++ {

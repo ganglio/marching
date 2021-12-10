@@ -74,3 +74,25 @@ func (e *E) AddE(a P, b P) int {
 	e.E = append(e.E, I{i1, i2})
 	return len(e.E) - 1
 }
+
+// Project projects E from one BB to another
+func (e E) Project(a BB, b BB) E {
+	t := make([]P, len(e.V))
+
+	// Normalize first
+	s := a.Size()
+	for k, p := range e.V {
+		t[k] = P{(p.X - a.P1.X) / s.X, (p.Y - a.P1.Y) / s.Y}
+	}
+
+	s = b.Size()
+	for k, p := range t {
+		t[k] = P{b.P1.X + s.X*p.X, b.P1.Y + s.Y*p.Y}
+	}
+
+	// Copy, Assign and Return
+	o := e
+	o.V = t
+
+	return o
+}

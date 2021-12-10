@@ -27,7 +27,7 @@ func TestBBSize(t *testing.T) {
 	assert.Equal(t, P{8, 3}, b.Size())
 }
 
-func TestAddV(t *testing.T) {
+func TestEAddV(t *testing.T) {
 	e := E{}
 
 	t.Run("Adds one P", func(t *testing.T) {
@@ -46,7 +46,7 @@ func TestAddV(t *testing.T) {
 	})
 }
 
-func TestAddE(t *testing.T) {
+func TestEAddE(t *testing.T) {
 	e := E{}
 
 	t.Run("Adds one edge", func(t *testing.T) {
@@ -63,4 +63,18 @@ func TestAddE(t *testing.T) {
 		i3 := e.AddE(P{3, 2}, P{3, 2})
 		assert.Equal(t, 1, i3)
 	})
+}
+
+func TestEProject(t *testing.T) {
+	e := E{}
+	e.AddE(P{-1, -1}, P{0, 1})
+	e.AddE(P{0, 1}, P{1, -1})
+
+	r := E{}
+	r.AddE(P{-3, -3}, P{0, 3})
+	r.AddE(P{0, 3}, P{3, -3})
+
+	p := e.Project(BB{P{-1, -1}, P{1, 1}}, BB{P{-3, -3}, P{3, 3}})
+
+	assert.Equal(t, r, p)
 }
