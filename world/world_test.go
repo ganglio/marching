@@ -1,6 +1,7 @@
 package world
 
 import (
+	"math"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -165,11 +166,13 @@ func benchmarkWorldGeometriesN(s int, b *testing.B) {
 		Circle(1, 0, 1.5),
 	)
 
-	w.Geometries(
-		BB{P{-3, -3}, P{3, 3}},
-		s, s,
-		0,
-	)
+	for n := 0; n < b.N; n++ {
+		w.Geometries(
+			BB{P{-3, -3}, P{3, 3}},
+			s, s,
+			0,
+		)
+	}
 }
 
 func BenchmarkWorldGeometries3(b *testing.B)    { benchmarkWorldGeometriesN(3, b) }
@@ -177,3 +180,28 @@ func BenchmarkWorldGeometries30(b *testing.B)   { benchmarkWorldGeometriesN(30, 
 func BenchmarkWorldGeometries100(b *testing.B)  { benchmarkWorldGeometriesN(100, b) }
 func BenchmarkWorldGeometries300(b *testing.B)  { benchmarkWorldGeometriesN(300, b) }
 func BenchmarkWorldGeometries1000(b *testing.B) { benchmarkWorldGeometriesN(1000, b) }
+
+func BenchmarkKindaRealWorld(b *testing.B) {
+	w := NewWorld(
+		func(x, y float64) float64 {
+			return Entity(func(x, y float64) float64 {
+				return 3 * math.Sin(x) * math.Cos(y)
+			}).Timed(func(x, y, t float64) (float64, float64) {
+				return x + t, y
+			})(x, y) * Box(0, 0, 2, 2, 10).Timed(func(x, y, t float64) (float64, float64) {
+				u := x*math.Cos(t/2) - y*math.Sin(t/2)
+				v := x*math.Sin(t/2) + y*math.Cos(t/2)
+				return u, v
+			})(x, y)
+		},
+	)
+
+	for n := 0; n < b.N; n++ {
+		w.Geometries(
+			BB{P{-3, -3}, P{3, 3}},
+			100, 100,
+			1,
+		)
+	}
+
+}

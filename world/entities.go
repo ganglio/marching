@@ -2,7 +2,10 @@ package world
 
 import (
 	"math"
+	"time"
 )
+
+var _starttime = time.Now()
 
 // Entity an entity in the world.
 type Entity func(x float64, y float64) float64
@@ -54,5 +57,29 @@ func (e Entity) Rot(teta float64) Entity {
 func (e Entity) Scale(alpha float64) Entity {
 	return func(x, y float64) float64 {
 		return e(x/alpha, y/alpha)
+	}
+}
+
+// Translate applies a (tx,ty) translation to the entity
+func (e Entity) Translate(tx, ty float64) Entity {
+	return func(x, y float64) float64 {
+		return e(x+tx, y+ty)
+	}
+}
+
+// Transform applies a functional transformation to the entity
+func (e Entity) Transform(f func(x, y float64) (float64, float64)) Entity {
+	return func(x, y float64) float64 {
+		u, v := f(x, y)
+		return e(u, v)
+	}
+}
+
+// Timed applies a time based transformation to the entity. The parameter t of the transformation is the time since the start of the process in float64 seconds
+func (e Entity) Timed(f func(x, y, t float64) (float64, float64)) Entity {
+	return func(x, y float64) float64 {
+		tt := time.Since(_starttime).Seconds()
+		u, v := f(x, y, tt)
+		return e(u, v)
 	}
 }

@@ -56,3 +56,33 @@ func TestScale(t *testing.T) {
 	assert.Equal(t, 4.0, f(1, 1))
 	assert.Equal(t, -4.0, f(-1, -1))
 }
+
+func TestTranslate(t *testing.T) {
+	f := Entity(func(x, y float64) float64 {
+		return x + y
+	}).Translate(1, 0)
+
+	assert.Equal(t, 1.0, f(0, 0))
+}
+
+func TestTransform(t *testing.T) {
+	f := Entity(func(x, y float64) float64 {
+		return x + y
+	}).Transform(func(x, y float64) (float64, float64) {
+		return x, -y
+	})
+
+	assert.Equal(t, 0.0, f(0, 0))
+	assert.Equal(t, 2.0, f(1, -1))
+}
+
+func TestTimed(t *testing.T) {
+	f := Entity(func(x, y float64) float64 {
+		return x + y
+	}).Timed(func(x, y, t float64) (float64, float64) {
+		return x, y
+	})
+
+	assert.Equal(t, 0.0, f(0, 0))
+	assert.Equal(t, 0.0, f(1, -1))
+}

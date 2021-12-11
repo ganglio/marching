@@ -38,7 +38,7 @@ func Update(w *world.World) func(window draw.Window) {
 			window.Close()
 		}
 
-		g := w.Geometries(camera, 300, 300, threshold)
+		g := w.Geometries(camera, 100, 100, threshold)
 
 		w, h := window.Size()
 		screen := world.BB{world.P{0, 0}, world.P{float64(w), float64(h)}}
